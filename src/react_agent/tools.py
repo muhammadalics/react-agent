@@ -25,5 +25,10 @@ async def search(query: str) -> Optional[dict[str, Any]]:
     wrapped = TavilySearch(max_results=runtime.context.max_search_results)
     return cast(dict[str, Any], await wrapped.ainvoke({"query": query}))
 
+async def query_database():
+    """
+    This is a tool to query database.
+    """
+    return {"data": "somthing from db"}
 
-TOOLS: List[Callable[..., Any]] = [search]
+TOOLS: List[Callable[..., Any]] = [search, query_database]

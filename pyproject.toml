@@ -16,6 +16,8 @@ dependencies = [
     "langchain-fireworks>=0.1.7",
     "python-dotenv>=1.0.1",
     "langchain-tavily>=0.1",
+    "agent-governance-toolkit[full] (>=3.2.2,<4.0.0)",
+    "langchain-ollama (>=1.1.0,<2.0.0)",
 ]
 
 

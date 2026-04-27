@@ -15,6 +15,8 @@ from react_agent.context import Context
 from react_agent.state import InputState, State
 from react_agent.tools import TOOLS
 from react_agent.utils import load_chat_model
+from react_agent.policy import policy
+from agent_os.policies import PolicyEvaluator
 
 # Define the function that calls the model
 
@@ -96,6 +98,13 @@ def route_model_output(state: State) -> Literal["__end__", "tools"]:
     # If there is no tool call, then we finish
     if not last_message.tool_calls:
         return "__end__"
+    
+    if last_message.tool_calls is not None:
+        for tool_call in last_message.tool_calls:
+            decision = evaluator.evaluate({"tool_name": tool_call["name"]})
+            if not decision.allowed:
+                raise ValueError(decision.reason)
+    
     # Otherwise we execute the requested actions
     return "tools"
 
@@ -114,3 +123,4 @@ builder.add_edge("tools", "call_model")
 
 # Compile the builder into an executable graph
 graph = builder.compile(name="ReAct Agent")
+evaluator = PolicyEvaluator(policies=[policy])
